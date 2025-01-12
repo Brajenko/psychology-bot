@@ -1,0 +1,5 @@
+aiogram~=3.0
+environs~=9.0
+sqlalchemy~=2.0
+alembic~=1.0
+asyncpg
