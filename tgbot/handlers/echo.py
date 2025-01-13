@@ -17,8 +17,8 @@ async def bot_echo(message: types.Message, user: User):
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state_name = await state.get_state()
     text = [
-        f"Ехо у стані {hcode(state_name)}",
-        "Зміст повідомлення:",
+        f"Эхо в состоянии {hcode(state_name)}",
+        "Содержание сообщения:",
         hcode(message.text),
     ]
     await message.answer("\n".join(text))
