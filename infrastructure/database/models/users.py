@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import BIGINT, SMALLINT, CheckConstraint, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, TimestampMixin
+
+if TYPE_CHECKING:
+    from .diary import DiaryRecord
 
 
 class User(Base, TimestampMixin):
@@ -14,6 +19,8 @@ class User(Base, TimestampMixin):
     age: Mapped[int | None] = mapped_column(
         SMALLINT, CheckConstraint("age >= 0", name="age_positive")
     )
+
+    diary_records: Mapped[list["DiaryRecord"]] = relationship(back_populates="user")
 
     def __repr__(self):
         return f"<User {self.id} {self.username} {self.full_name}>"
