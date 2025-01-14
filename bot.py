@@ -3,13 +3,14 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.scene import SceneRegistry
+from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
 
+from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import Config, load_config
 from tgbot.handlers import routers_list
 from tgbot.middlewares import ConfigMiddleware, DatabaseMiddleware
-from infrastructure.database.setup import create_session_pool, create_engine
-
+from tgbot.handlers.polls import PollScene
 
 async def on_startup(bot: Bot):
     return
@@ -82,9 +83,12 @@ async def main():
     storage = get_storage(config)
 
     bot = Bot(token=config.tg_bot.token, default=DefaultBotProperties())
-    dp = Dispatcher(storage=storage)
+    dp = Dispatcher(storage=storage, events_isolation=SimpleEventIsolation())
 
     dp.include_routers(*routers_list)
+
+    scene_registry = SceneRegistry(dp)
+    scene_registry.add(PollScene)
 
     register_global_middlewares(dp, config)
 
