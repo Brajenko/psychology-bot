@@ -2,7 +2,7 @@
 
 setup:
 	pip install -r requirements.txt -r dev-requirements.txt
-	docker run --name ps_bot_postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=ps_bot -p 5432:5432 -d postgres:14-alpine
+	docker compose up -d pg_database
 	alembic upgrade head
 
 run:
