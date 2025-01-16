@@ -8,10 +8,9 @@ from infrastructure.database.models import User
 echo_router = Router()
 
 
-@echo_router.message(F.text, StateFilter(None))
-async def bot_echo(message: types.Message, user: User):
-    await message.answer(f"{user.call_name} said:\n{message.text}")
-
+# @echo_router.message(F.text, StateFilter(None))
+# async def bot_echo(message: types.Message, user: User):
+#     await message.answer(f"{user.call_name} said:\n{message.text}")
 
 @echo_router.message(F.text)
 async def bot_echo_all(message: types.Message, state: FSMContext):
