@@ -8,3 +8,7 @@ class Registration(StatesGroup):
 
 class PollChoose(StatesGroup):
     choose = State()
+
+
+class MarkChoose(StatesGroup):
+    mark = State()
