@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from infrastructure.database.models import User
 from tgbot.misc.states import Registration
+import tgbot.keyboards.diary_keyboard as kb
 
 register_router = Router()
 
@@ -40,7 +41,7 @@ async def process_age(message: Message, state: FSMContext, user: User, session: 
         await session.commit()
         await state.clear()
         await message.answer(
-            "Спасибо! Теперь можешь начинать пользоваться ..."
+            "Спасибо! Теперь можешь начинать пользоваться ...", reply_markup=kb.main
         )  # TODO: написать нормальное сообщение
     else:
         await message.answer("Не понимаю( Пожалуйста, введи свой возраст цифрами!")

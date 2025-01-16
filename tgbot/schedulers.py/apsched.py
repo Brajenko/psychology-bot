@@ -19,3 +19,6 @@ async def send_periodic_message(bot: Bot, users: set):
 def start_scheduler(bot: Bot, users: set):
     scheduler.add_job(send_periodic_message, "interval", seconds=15, args=[bot, users])
     scheduler.start()
+
+def stop_scheduler():
+    scheduler.shutdown()
