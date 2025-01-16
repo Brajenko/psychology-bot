@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import Union
+from typing import Union, Iterable
 
 from aiogram import Bot
 from aiogram import exceptions
@@ -53,7 +53,7 @@ async def send_message(
 
 async def broadcast(
     bot: Bot,
-    users: list[Union[str, int]],
+    users: Iterable[Union[str, int]],
     text: str,
     disable_notification: bool = False,
     reply_markup: InlineKeyboardMarkup | None = None,
@@ -70,9 +70,13 @@ async def broadcast(
     count = 0
     try:
         for user_id in users:
-            if await send_message(bot, user_id, text, disable_notification, reply_markup):
+            if await send_message(
+                bot, user_id, text, disable_notification, reply_markup
+            ):
                 count += 1
-            await asyncio.sleep(0.05)  # 20 messages per second (Limit: 30 messages per second)
+            await asyncio.sleep(
+                0.05
+            )  # 20 messages per second (Limit: 30 messages per second)
     finally:
         logging.info(f"{count} messages successful sent.")
 

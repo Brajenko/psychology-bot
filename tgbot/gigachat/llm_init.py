@@ -2,7 +2,7 @@ from langchain_gigachat.chat_models import GigaChat
 from environs import Env
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
-from .prompts import *
+from .prompts import BASIC_PROMPT
 import asyncio
 
 # Асинхронная блокировка

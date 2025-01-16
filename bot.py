@@ -5,12 +5,15 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.scene import SceneRegistry
 from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
+from apscheduler.schedulers.asyncio import AsyncIOScheduler  # type: ignore
 
 from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import Config, load_config
 from tgbot.handlers import routers_list
-from tgbot.middlewares import ConfigMiddleware, DatabaseMiddleware
 from tgbot.handlers.polls import PollScene
+from tgbot.middlewares import ConfigMiddleware, DatabaseMiddleware
+from tgbot.services.scheduler import send_periodic_message
+
 
 async def on_startup(bot: Bot):
     return
@@ -76,6 +79,12 @@ def get_storage(config):
     return MemoryStorage()
 
 
+def run_scheduler_tasks(bot: Bot, scheduler: AsyncIOScheduler):
+    scheduler.add_job(send_periodic_message, "interval", seconds=15, args=[bot])
+    scheduler.start()
+    logging.info("Scheduler started")
+
+
 async def main():
     setup_logging()
 
@@ -91,6 +100,9 @@ async def main():
     scene_registry.add(PollScene)
 
     register_global_middlewares(dp, config)
+
+    scheduler = AsyncIOScheduler()
+    run_scheduler_tasks(bot, scheduler)
 
     await on_startup(bot)
     await dp.start_polling(bot)

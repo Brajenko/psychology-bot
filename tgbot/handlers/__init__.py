@@ -1,4 +1,3 @@
-from .simple_menu import menu_router
 from .register import register_router
 from .polls import poll_router
 from .diary import diary_router
