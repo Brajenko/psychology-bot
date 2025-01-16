@@ -99,6 +99,8 @@ async def main():
 if __name__ == "__main__":
     try:
         asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Bot has stopped!")
     finally:
         logger = logging.getLogger(__name__)
         logger.info("Bot stopped")
