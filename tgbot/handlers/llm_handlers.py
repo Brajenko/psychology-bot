@@ -1,5 +1,4 @@
 from aiogram import types, Router, F
-from aiogram.utils.markdown import hcode
 from tgbot.gigachat.llm_init import get_response
 from infrastructure.database.models import User
 

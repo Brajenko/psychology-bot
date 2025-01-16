@@ -1,6 +1,7 @@
+import datetime as dt
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BIGINT, SMALLINT, CheckConstraint, String
+from sqlalchemy import BIGINT, SMALLINT, CheckConstraint, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, TimestampMixin
@@ -19,6 +20,7 @@ class User(Base, TimestampMixin):
     age: Mapped[int | None] = mapped_column(
         SMALLINT, CheckConstraint("age >= 0", name="age_positive")
     )
+    last_diary_sent: Mapped[dt.datetime | None] = mapped_column(DateTime, default=None)
 
     diary_records: Mapped[list["DiaryRecord"]] = relationship(back_populates="user")
 
