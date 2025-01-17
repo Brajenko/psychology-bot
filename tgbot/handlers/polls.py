@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from tgbot.misc.states import PollChoose
-from infrastructure.database.models import Poll, Question, Variant, Result
+from infrastructure.database.models import Poll, Question, Result
 
 from tgbot.keyboards.reply import (
     generate_keyboard_for_question,
@@ -17,7 +17,9 @@ from tgbot.keyboards.reply import (
 )
 
 
-async def get_current_question(session: AsyncSession, poll_id: int, step: int) -> Question | None:
+async def get_current_question(
+    session: AsyncSession, poll_id: int, step: int
+) -> Question | None:
     return (
         await session.execute(
             select(Question)
@@ -25,18 +27,6 @@ async def get_current_question(session: AsyncSession, poll_id: int, step: int) -
             .limit(1)
             .offset(step)
             .options(selectinload(Question.variants))
-        )
-    ).scalar_one_or_none()
-
-
-async def get_variant(
-    session: AsyncSession, question_id: int, variant_content: str
-) -> Variant | None:
-    return (
-        await session.execute(
-            select(Variant)
-            .filter(Variant.question_id == question_id)
-            .filter(Variant.content == variant_content)
         )
     ).scalar_one_or_none()
 
@@ -51,7 +41,9 @@ async def get_poll(session: AsyncSession, poll_id: int) -> Poll:
 
 
 async def get_poll_by_name(session: AsyncSession, poll_name: str) -> Poll | None:
-    return (await session.execute(select(Poll).filter(Poll.name == poll_name))).scalar_one_or_none()
+    return (
+        await session.execute(select(Poll).filter(Poll.name == poll_name))
+    ).scalar_one_or_none()
 
 
 async def get_results(session: AsyncSession, poll_id: int, score: int) -> Result:
@@ -93,7 +85,11 @@ class PollScene(Scene, state="poll"):
 
     @on.message.exit()
     async def on_exit(
-        self, message: Message, session: AsyncSession, state: FSMContext, silent: bool = False
+        self,
+        message: Message,
+        session: AsyncSession,
+        state: FSMContext,
+        silent: bool = False,
     ) -> None:
         if silent:
             return await state.clear()
@@ -104,19 +100,18 @@ class PollScene(Scene, state="poll"):
         await state.clear()
 
     @on.message()
-    async def answer(self, message: Message, state: FSMContext, session: AsyncSession) -> None:
+    async def answer(
+        self, message: Message, state: FSMContext, session: AsyncSession
+    ) -> None:
         data = await state.get_data()
         step: int = data["step"]
         score: int = data["score"]
         q = await get_current_question(session, data["poll_id"], step)
         if q is None:
             return await self.wizard.exit(session=session)
-        v = await get_variant(
-            session,
-            q.id,
-            message.text or "",
-        )
-        if v is None:
+        try:
+            v = next((v for v in q.variants if v.content == message.text))
+        except StopIteration:
             await message.answer("Нужно выбрать один из вариантов ответа")
             return
 
@@ -152,3 +147,4 @@ async def poll_choose(
         await message.answer("Выбери тест из списка")
         return
     await scenes.enter(PollScene, poll_id=poll.id, session=session)
+    await state.set_state("poll")

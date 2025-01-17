@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Text, SMALLINT
+from sqlalchemy import Column, String, ForeignKey, Table, Text, SMALLINT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, IdMixin, TimestampMixin
@@ -14,22 +14,27 @@ class Poll(IdMixin, Base):
     completions: Mapped[list["Completion"]] = relationship(back_populates="poll")
 
 
+question2variant = Table(
+    "question_to_variant",
+    Base.metadata,
+    Column("question_id", ForeignKey("questions.id")),
+    Column("variant_id", ForeignKey("variants.id")),
+)
+
+
 class Question(IdMixin, Base):
     __tablename__ = "questions"
 
     poll_id: Mapped[int] = mapped_column(ForeignKey("polls.id"))
     poll: Mapped["Poll"] = relationship(back_populates="questions")
 
-    variants: Mapped[list["Variant"]] = relationship(back_populates="question")
+    variants: Mapped[list["Variant"]] = relationship(secondary=question2variant)
 
     content: Mapped[str] = mapped_column(String(255))
 
 
 class Variant(IdMixin, Base):
     __tablename__ = "variants"
-
-    question_id: Mapped[int] = mapped_column(ForeignKey("questions.id"))
-    question: Mapped["Question"] = relationship(back_populates="variants")
 
     content: Mapped[str] = mapped_column(String(255))
     points: Mapped[int] = mapped_column(SMALLINT)
