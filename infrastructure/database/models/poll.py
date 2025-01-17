@@ -1,4 +1,11 @@
-from sqlalchemy import Column, String, ForeignKey, Table, Text, SMALLINT
+from sqlalchemy import (
+    Column,
+    String,
+    ForeignKey,
+    Table,
+    Text,
+    SMALLINT,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, IdMixin, TimestampMixin

@@ -3,18 +3,18 @@ import typing
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.scene import Scene, ScenesManager, on
+from aiogram.fsm.scene import Scene, SceneRegistry, ScenesManager, on
 from aiogram.types import Message, ReplyKeyboardRemove
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from tgbot.misc.states import PollChoose
-from infrastructure.database.models import Poll, Question, Result
 
+from infrastructure.database.models import Poll, Question, Result
 from tgbot.keyboards.reply import (
-    generate_keyboard_for_question,
     generate_keyboard_for_poll_choosing,
+    generate_keyboard_for_question,
 )
+from tgbot.misc.states import PollChoose
 
 
 async def get_current_question(
@@ -148,3 +148,7 @@ async def poll_choose(
         return
     await scenes.enter(PollScene, poll_id=poll.id, session=session)
     await state.set_state("poll")
+
+
+scene_registry = SceneRegistry(poll_router)
+scene_registry.add(PollScene)
