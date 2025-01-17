@@ -21,6 +21,7 @@ class User(Base, TimestampMixin):
         SMALLINT, CheckConstraint("age >= 0", name="age_positive")
     )
     last_diary_sent: Mapped[dt.datetime | None] = mapped_column(DateTime, default=None)
+    is_diary_on: Mapped[bool] = mapped_column(default=True)
 
     diary_records: Mapped[list["DiaryRecord"]] = relationship(back_populates="user")
 

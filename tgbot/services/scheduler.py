@@ -7,7 +7,7 @@ from aiogram import Bot
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
-import tgbot.keyboards.diary_keyboard as kb
+import tgbot.keyboards.inline as inline_kb
 from infrastructure.database import models
 from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import load_config
@@ -57,6 +57,6 @@ async def send_periodic_message(bot: Bot):
                 bot,
                 user_id,
                 text="Оцените свое эмоциональное состояние от 1 до 10:",
-                reply_markup=kb.diary,
+                reply_markup=inline_kb.diary,
             ):
                 await update_user_sent_diary(session, user_id)
