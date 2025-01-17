@@ -96,8 +96,8 @@ async def main():
 
     register_global_middlewares(dp, config)
 
-    # scheduler = AsyncIOScheduler()
-    # run_scheduler_tasks(bot, scheduler)
+    scheduler = AsyncIOScheduler()
+    run_scheduler_tasks(bot, scheduler)
 
     await on_startup(bot)
     await dp.start_polling(bot)
