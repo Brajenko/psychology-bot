@@ -3,14 +3,12 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.fsm.scene import SceneRegistry
 from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
 from apscheduler.schedulers.asyncio import AsyncIOScheduler  # type: ignore
 
 from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import Config, load_config
 from tgbot.handlers import routers_list
-from tgbot.handlers.polls import PollScene
 from tgbot.middlewares import ConfigMiddleware, DatabaseMiddleware
 from tgbot.services.scheduler import send_periodic_message
 
@@ -95,9 +93,6 @@ async def main():
     dp = Dispatcher(storage=storage, events_isolation=SimpleEventIsolation())
 
     dp.include_routers(*routers_list)
-
-    scene_registry = SceneRegistry(dp)
-    scene_registry.add(PollScene)
 
     register_global_middlewares(dp, config)
 
