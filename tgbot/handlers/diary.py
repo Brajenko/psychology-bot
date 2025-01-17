@@ -7,9 +7,10 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import BufferedInputFile, CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from aiogram.fsm.context import FSMContext
 import tgbot.keyboards.inline as inline_kb
 from infrastructure.database import models
+from tgbot.handlers.llm_handlers import start_helping_dialog
 
 diary_router = Router()
 
@@ -75,7 +76,7 @@ async def build_graph(message: Message, session: AsyncSession, user: models.User
 
 @diary_router.callback_query(F.data.in_([str(i) for i in range(1, 11)]))
 async def handle_diary_callback(
-    callback: CallbackQuery, session: AsyncSession, user: models.User
+    callback: CallbackQuery, session: AsyncSession, user: models.User, state: FSMContext
 ):
     selected_value = callback.data
     if callback.message is None or selected_value is None:
@@ -86,6 +87,8 @@ async def handle_diary_callback(
     )
     await callback.answer()
     await session.commit()
+    if int(selected_value) < 3:  # TODO: мб не 3
+        await start_helping_dialog(callback.message, state)  # type: ignore[arg-type]
 
 
 @diary_router.message(Command("diary_settings"))

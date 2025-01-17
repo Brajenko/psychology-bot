@@ -66,3 +66,5 @@ class Result(IdMixin, Base):
 
     min_points: Mapped[int] = mapped_column(SMALLINT)
     max_points: Mapped[int] = mapped_column(SMALLINT)
+
+    is_critical: Mapped[bool]

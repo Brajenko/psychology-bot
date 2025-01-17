@@ -14,6 +14,7 @@ from tgbot.keyboards.reply import (
     generate_keyboard_for_poll_choosing,
     generate_keyboard_for_question,
 )
+from tgbot.handlers.llm_handlers import start_helping_dialog
 from tgbot.misc.states import PollChoose
 
 
@@ -76,7 +77,7 @@ class PollScene(Scene, state="poll"):
 
         q = await get_current_question(session, poll_id, step)
         if q is None:
-            return await self.wizard.exit(session=session)
+            return await self.wizard.exit(session=session, state=state)
 
         return await message.answer(
             text=q.content,
@@ -96,8 +97,10 @@ class PollScene(Scene, state="poll"):
         data = await state.get_data()
         score: int = data["score"]
         res = await get_results(session, data["poll_id"], score)
-        await message.answer(res.content, reply_markup=ReplyKeyboardRemove())
+        await message.answer(res.content, reply_markup=ReplyKeyboardRemove()) # TODO: добавить нормальный ответ
         await state.clear()
+        if res.is_critical:
+            await start_helping_dialog(message, state)
 
     @on.message()
     async def answer(
@@ -108,7 +111,7 @@ class PollScene(Scene, state="poll"):
         score: int = data["score"]
         q = await get_current_question(session, data["poll_id"], step)
         if q is None:
-            return await self.wizard.exit(session=session)
+            return await self.wizard.exit(session=session, state=state)
         try:
             v = next((v for v in q.variants if v.content == message.text))
         except StopIteration:
