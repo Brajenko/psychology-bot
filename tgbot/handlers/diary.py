@@ -84,7 +84,7 @@ async def handle_diary_callback(
         await start_helping_dialog(
             callback.message,  # type: ignore[arg-type]
             state,
-            f"Пользователь поставил низкую оценку ({selected_value}) в своем 'дневнике состояния'",
+            f"Пользователь оченил своё настроение на {selected_value} из 10 в своем 'дневнике состояния'",
         )
 
 
