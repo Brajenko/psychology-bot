@@ -12,7 +12,3 @@ class PollChoose(StatesGroup):
 
 class MarkChoose(StatesGroup):
     mark = State()
-
-
-class LLM(StatesGroup):
-    helping = State()

@@ -27,9 +27,6 @@ def register_global_middlewares(dp: Dispatcher, config: Config):
     :param config: The configuration object from the loaded configuration.
     :return: None
     """
-    if config.db is None:
-        raise ValueError("Database configuration is missing")
-
     middleware_types = [
         ConfigMiddleware(config),
         DatabaseMiddleware(create_session_pool(create_engine(config.db))),

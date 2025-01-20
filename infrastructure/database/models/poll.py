@@ -19,6 +19,7 @@ class Poll(IdMixin, Base):
     is_psychological: Mapped[bool]
     questions: Mapped[list["Question"]] = relationship(back_populates="poll")
     completions: Mapped[list["Completion"]] = relationship(back_populates="poll")
+    results: Mapped[list["Result"]] = relationship(back_populates="poll")
 
 
 question2variant = Table(
@@ -60,7 +61,7 @@ class Result(IdMixin, Base):
     __tablename__ = "results"
 
     poll_id: Mapped[int] = mapped_column(ForeignKey("polls.id"))
-    poll: Mapped["Poll"] = relationship()
+    poll: Mapped["Poll"] = relationship(back_populates="results")
 
     content: Mapped[str] = mapped_column(String(255))
 

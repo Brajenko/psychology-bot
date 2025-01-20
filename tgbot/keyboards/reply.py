@@ -18,5 +18,5 @@ def generate_keyboard_for_question(q: Question) -> ReplyKeyboardMarkup:
 def generate_keyboard_for_poll_choosing(polls: typing.Iterable[Poll]) -> ReplyKeyboardMarkup:
     rkb = ReplyKeyboardBuilder()
     for p in polls:
-        rkb.add(KeyboardButton(text=p.name))
+        rkb.row(KeyboardButton(text=p.name))
     return rkb.as_markup(resize_keyboard=True, one_time_keyboard=True)
