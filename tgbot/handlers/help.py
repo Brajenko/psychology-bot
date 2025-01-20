@@ -4,14 +4,6 @@ from aiogram.types import Message
 
 help_router = Router()
 
-
-#/fill_diary
-#/diary_statistics
-#/diary_settings
-#/help
-#/start_poll
-
-
 @help_router.message(Command("help"))
 async def cmd_help(message: Message):
     help_text = (

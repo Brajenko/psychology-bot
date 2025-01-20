@@ -97,7 +97,7 @@ class PollScene(Scene, state="poll"):
         data = await state.get_data()
         score: int = data["score"]
         res = await get_results(session, data["poll_id"], score)
-        await message.answer(res.content, reply_markup=ReplyKeyboardRemove()) # TODO: добавить нормальный ответ
+        await message.answer("Ваш результат: " + res.content, reply_markup=ReplyKeyboardRemove()) # TODO: добавить нормальный ответ
         await state.clear()
         if res.is_critical:
             await start_helping_dialog(message, state)
