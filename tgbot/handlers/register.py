@@ -22,7 +22,7 @@ async def command_start(message: Message, user: User, state: FSMContext) -> None
     if s == Registration.name:
         await message.answer("Привет! Подскажи, как лучше к тебе обращаться?")
     else:
-        await message.answer("что нибудь сюда напишем")
+        await message.answer("Ты уже зарегистрирован! Попробуй /help")
 
 
 @register_router.message(Registration.name)

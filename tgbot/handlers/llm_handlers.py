@@ -16,6 +16,6 @@ async def start_helping_dialog(message: types.Message, state: FSMContext, proble
 @gigachat_router.message(F.text)
 async def message_to_llm(message: types.Message, user: User, state: FSMContext):
     problem = await state.get_value("problem")
-    await message.answer(await get_response(user, user_input={message.text}, problem=problem))
+    await message.answer(await get_response(user, user_input={str(message.text)}, problem=problem))
     if problem is not None:
         await state.clear()
