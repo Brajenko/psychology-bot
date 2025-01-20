@@ -38,7 +38,8 @@ async def get_mark(message: Message):
     if message is None:
         return
     await message.answer(
-        "Оцените свое эмоционально состояние от 1 до 10:", reply_markup=inline_kb.diary
+        'Оцените свое эмоциональное состояние от 1 до 10 (1 - "всё очень плохо", 5 - "нейтрально", 10 - "всё отлично"):',
+        reply_markup=inline_kb.diary
     )
 
 
@@ -83,7 +84,7 @@ async def handle_diary_callback(
         await start_helping_dialog(
             callback.message,  # type: ignore[arg-type]
             state,
-            f"Пользователь поставил низкую оценку ({selected_value}) в своем 'дневнике состояния'",
+            f"Пользователь оченил своё настроение на {selected_value} из 10 в своем 'дневнике состояния'",
         )
 
 
