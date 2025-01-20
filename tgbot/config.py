@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 from sqlalchemy.engine.url import URL
 
 from environs import Env

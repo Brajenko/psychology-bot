@@ -26,10 +26,30 @@ polls = [
             {"content": "Почти каждый день", "points": 3},
         ],
         "results": [
-            {"content": "Минимальный уровень тревоги", "min_points": 0, "max_points": 4, "is_critical": False},
-            {"content": "Легкий уровень тревоги", "min_points": 5, "max_points": 9, "is_critical": False},
-            {"content": "Умеренная тревожность", "min_points": 10, "max_points": 14, "is_critical": False},
-            {"content": "Высокий уровень тревоги", "min_points": 15, "max_points": 100, "is_critical": True},
+            {
+                "content": "Минимальный уровень тревоги",
+                "min_points": 0,
+                "max_points": 4,
+                "is_critical": False,
+            },
+            {
+                "content": "Легкий уровень тревоги",
+                "min_points": 5,
+                "max_points": 9,
+                "is_critical": False,
+            },
+            {
+                "content": "Умеренная тревожность",
+                "min_points": 10,
+                "max_points": 14,
+                "is_critical": False,
+            },
+            {
+                "content": "Высокий уровень тревоги",
+                "min_points": 15,
+                "max_points": 100,
+                "is_critical": True,
+            },
         ],
     },
     {
@@ -54,7 +74,12 @@ polls = [
         ],
         "results": [
             {"content": "ниже среднего", "min_points": 5, "max_points": 16, "is_critical": False},
-            {"content": "среднее значение", "min_points": 17, "max_points": 24, "is_critical": False},
+            {
+                "content": "среднее значение",
+                "min_points": 17,
+                "max_points": 24,
+                "is_critical": False,
+            },
             {"content": "выше среднего", "min_points": 25, "max_points": 35, "is_critical": True},
         ],
     },
@@ -94,8 +119,18 @@ polls = [
             {"content": "Очень часто", "points": 5},
         ],
         "results": [
-            {"content": "низкий уровень стресса", "min_points": 0, "max_points": 15, "is_critical": False},
-            {"content": "средний уровень стресса", "min_points": 16, "max_points": 31, "is_critical": False},
+            {
+                "content": "низкий уровень стресса",
+                "min_points": 0,
+                "max_points": 15,
+                "is_critical": False,
+            },
+            {
+                "content": "средний уровень стресса",
+                "min_points": 16,
+                "max_points": 31,
+                "is_critical": False,
+            },
             {"content": "выше среднего", "min_points": 32, "max_points": 56, "is_critical": True},
         ],
     },
@@ -111,14 +146,14 @@ async def main():
             results = poll_data.pop("results")
             p = Poll(**poll_data)
 
-            for q_data in questions:
+            for q_data in questions:  # type: ignore
                 q = Question(**q_data)
-                for v_data in variants:
+                for v_data in variants:  # type: ignore
                     v = Variant(**v_data)
                     q.variants.append(v)
                 p.questions.append(q)
 
-            for r_data in results:
+            for r_data in results:  # type: ignore
                 r = Result(**r_data)
                 p.results.append(r)
 
