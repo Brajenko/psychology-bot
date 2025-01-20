@@ -42,7 +42,8 @@ async def get_mark(message: Message):
     if message is None:
         return
     await message.answer(
-        "Оцените свое эмоционально состояние от 1 до 10:", reply_markup=inline_kb.diary
+        'Оцените свое эмоциональное состояние от 1 до 10 (1 - "всё очень плохо", 5 - "нейтрально", 10 - "всё отлично"):',
+        reply_markup=inline_kb.diary
     )
 
 

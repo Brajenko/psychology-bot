@@ -56,7 +56,7 @@ async def send_periodic_message(bot: Bot):
             if await send_message(
                 bot,
                 user_id,
-                text="Оцените свое эмоциональное состояние от 1 до 10:",
+                text='Оцените свое эмоциональное состояние от 1 до 10 (1 - "всё очень плохо", 5 - "нейтрально", 10 - "всё отлично"):',
                 reply_markup=inline_kb.diary,
             ):
                 await update_user_sent_diary(session, user_id)
