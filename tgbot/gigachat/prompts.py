@@ -17,3 +17,4 @@ prompt_template = """
 Ты отвечаешь: """
 
 BASIC_PROMPT = PromptTemplate(template=prompt_template, input_variables=["history", "input"])
+PROBLEM_PROMPT = "ВНИМАНИЕ ПОЛЬЗОВАТЕЛЬ ПРОШЕЛ ОПРОС ИЗ КОТОРОГО ПОНЯТНО, ЧТО У НЕГО ПЛОХОЕ ЭМОЦИОНАЛЬНОЕ СОСТОЯНИЕ, ПРИЛОЖИ ВСЕ СИЛЫ ЧТОБЫ ПОМОЧЬ ЕМУ. БОЛЕЕ ПОДРОБНОЕ ОПИСАНИЕ ПРОБЛЕМЫ: "

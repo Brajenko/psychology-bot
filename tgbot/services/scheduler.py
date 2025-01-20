@@ -50,7 +50,7 @@ async def update_user_sent_diary(session: AsyncSession, user_id: int):
 
 
 async def send_periodic_message(bot: Bot):
-    async with create_session_pool(create_engine(load_config(".env").db))() as session:  # type: ignore
+    async with create_session_pool(create_engine(load_config(".env").db))() as session:
         user_ids = await get_users_to_send_diary(session)
         for user_id in user_ids:
             if await send_message(

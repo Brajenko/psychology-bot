@@ -30,5 +30,4 @@ migrate:
 	alembic upgrade head
 
 init_db:
-	docker compose cp ./init_polls.sql pg_database:/init_polls.sql
-	docker compose exec pg_database psql ps_bot -U postgres -f /init_polls.sql
+	python init_db.py

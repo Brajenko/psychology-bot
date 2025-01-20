@@ -18,9 +18,7 @@ from tgbot.handlers.llm_handlers import start_helping_dialog
 from tgbot.misc.states import PollChoose
 
 
-async def get_current_question(
-    session: AsyncSession, poll_id: int, step: int
-) -> Question | None:
+async def get_current_question(session: AsyncSession, poll_id: int, step: int) -> Question | None:
     return (
         await session.execute(
             select(Question)
@@ -42,9 +40,7 @@ async def get_poll(session: AsyncSession, poll_id: int) -> Poll:
 
 
 async def get_poll_by_name(session: AsyncSession, poll_name: str) -> Poll | None:
-    return (
-        await session.execute(select(Poll).filter(Poll.name == poll_name))
-    ).scalar_one_or_none()
+    return (await session.execute(select(Poll).filter(Poll.name == poll_name))).scalar_one_or_none()
 
 
 async def get_results(session: AsyncSession, poll_id: int, score: int) -> Result:
@@ -97,15 +93,18 @@ class PollScene(Scene, state="poll"):
         data = await state.get_data()
         score: int = data["score"]
         res = await get_results(session, data["poll_id"], score)
-        await message.answer("Ваш результат: " + res.content, reply_markup=ReplyKeyboardRemove()) # TODO: добавить нормальный ответ
+        await message.answer("Ваш результат: " + res.content, reply_markup=ReplyKeyboardRemove())
+        poll = await get_poll(session, data["poll_id"])
         await state.clear()
         if res.is_critical:
-            await start_helping_dialog(message, state)
+            await start_helping_dialog(
+                message,
+                state,
+                f"Пользователь прошел тест {poll.name} и получил плохой результат {res.content}",
+            )
 
     @on.message()
-    async def answer(
-        self, message: Message, state: FSMContext, session: AsyncSession
-    ) -> None:
+    async def answer(self, message: Message, state: FSMContext, session: AsyncSession) -> None:
         data = await state.get_data()
         step: int = data["step"]
         score: int = data["score"]

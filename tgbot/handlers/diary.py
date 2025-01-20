@@ -16,9 +16,7 @@ diary_router = Router()
 
 
 async def add_diary_record(session: AsyncSession, user_id: int, score: int):
-    await session.execute(
-        sa.insert(models.DiaryRecord).values(user_id=user_id, score=score)
-    )
+    await session.execute(sa.insert(models.DiaryRecord).values(user_id=user_id, score=score))
 
 
 async def get_diary_records(
@@ -27,9 +25,7 @@ async def get_diary_records(
     return (
         (
             await session.execute(
-                sa.select(models.DiaryRecord).where(
-                    models.DiaryRecord.user_id == user_id
-                )
+                sa.select(models.DiaryRecord).where(models.DiaryRecord.user_id == user_id)
             )
         )
         .scalars()
@@ -55,9 +51,7 @@ async def build_graph(message: Message, session: AsyncSession, user: models.User
     dates_labels = [r.created_at.strftime(r"%d/%m/%Y") for r in records]
 
     plt.figure(figsize=(8, 4))
-    plt.plot(
-        list(range(1, len(values) + 1)), values, marker="o", label="Оценка состояния"
-    )
+    plt.plot(list(range(1, len(values) + 1)), values, marker="o", label="Оценка состояния")
     plt.title("Ваш дневник состояния")
     plt.xlabel("Сессии")
     plt.ylabel("Оценка (1-10)")
@@ -69,9 +63,7 @@ async def build_graph(message: Message, session: AsyncSession, user: models.User
     plt.savefig(buf, format="png")
     buf.seek(0)
 
-    await message.answer_photo(
-        photo=BufferedInputFile(buf.read(), filename="diary.png")
-    )
+    await message.answer_photo(photo=BufferedInputFile(buf.read(), filename="diary.png"))
 
 
 @diary_router.callback_query(F.data.in_([str(i) for i in range(1, 11)]))
@@ -87,8 +79,12 @@ async def handle_diary_callback(
     )
     await callback.answer()
     await session.commit()
-    if int(selected_value) < 3:  # TODO: мб не 3
-        await start_helping_dialog(callback.message, state)  # type: ignore[arg-type]
+    if int(selected_value) < 3:
+        await start_helping_dialog(
+            callback.message,  # type: ignore[arg-type]
+            state,
+            f"Пользователь поставил низкую оценку ({selected_value}) в своем 'дневнике состояния'",
+        )
 
 
 @diary_router.message(Command("diary_settings"))

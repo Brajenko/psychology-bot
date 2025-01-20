@@ -97,7 +97,7 @@ class Config:
     """
 
     tg_bot: TgBot
-    db: Optional[DbConfig] = None
+    db: DbConfig
 
 
 def load_config(path: str | None = None) -> Config:

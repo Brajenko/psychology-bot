@@ -26,38 +26,30 @@ async def command_start(message: Message, user: User, state: FSMContext) -> None
 
 
 @register_router.message(Registration.name)
-async def process_name(
-    message: Message, state: FSMContext, user: User, session: AsyncSession
-):
+async def process_name(message: Message, state: FSMContext, user: User, session: AsyncSession):
     if message.text:
         if len(message.text) > 128:
             await message.answer("Имя слишком длинное! Попробуй еще раз.")
             return
         user.call_name = message.text
         await session.commit()
-        await message.answer(
-            f"Приятно познакомиться, {message.text}! Сколько тебе лет?"
-        )
+        await message.answer(f"Приятно познакомиться, {message.text}! Сколько тебе лет?")
         await state.set_state(Registration.age)
     else:
         await message.answer("Пожалуйста, введи свое имя!")
 
 
 @register_router.message(Registration.age)
-async def process_age(
-    message: Message, state: FSMContext, user: User, session: AsyncSession
-):
+async def process_age(message: Message, state: FSMContext, user: User, session: AsyncSession):
     if message.text is not None and message.text.isdigit():
         if int(message.text) < 0:
-            await message.answer(
-                "Возраст не может быть отрицательным! Попробуй еще раз."
-            )
+            await message.answer("Возраст не может быть отрицательным! Попробуй еще раз.")
             return
         user.age = int(message.text)
         await session.commit()
         await state.clear()
         await message.answer(
-            "Спасибо! Теперь можешь начинать пользоваться ..."
-        )  # TODO: написать нормальное сообщение
+            "Ты зарегистрирован! Теперь можешь пользоваться всеми функциями бота. Подсказка: попробуй /help"
+        )
     else:
         await message.answer("Не понимаю( Пожалуйста, введи свой возраст цифрами!")
